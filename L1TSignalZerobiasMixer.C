@@ -14,7 +14,7 @@ R__LOAD_LIBRARY(libDelphes)
 
 //------------------------------------------------------------------------------
 
-void Example1(const char *inputFile)
+void L1TSignalZerobiasMixer(const char *inputFile)
 {
   gSystem->Load("libDelphes");
 
@@ -25,17 +25,20 @@ void Example1(const char *inputFile)
   // Create object of class ExRootTreeReader
   ExRootTreeReader *treeReader = new ExRootTreeReader(&chain);
   Long64_t numberOfEntries = treeReader->GetEntries();
-
+  std::cout << "numberOfEntries = " << numberOfEntries << std::endl;
   // Get pointers to branches used in this analysis
   TClonesArray *branchTower = treeReader->UseBranch("Tower");
+  std::cout << "*branchTower = " << branchTower << std::endl;
 
   // Loop over all events
   for(Int_t event = 0; event < numberOfEntries; ++event)
   {
     // Load selected branches with data from specified event
     treeReader->ReadEntry(event);
-
+    std::cout << "got event = " << event << std::endl;
+    
     Long64_t nTowers = branchTower->GetEntries();
+    std::cout << "nTowers = " << nTowers << std::endl;
     // If event contains at least 1 tower
     if(nTowers > 0)
     {
@@ -45,7 +48,7 @@ void Example1(const char *inputFile)
 	Tower *tower = (Tower*) branchTower->At(i);
 
 	// Print tower
-	cout << "Tower (pt, eta, phi) = (: " << tower->ET << "," << tower->Eta << "," << tower->Phi << ")" << endl;
+	std::cout << "Tower (pt, eta, phi) = (: " << tower->ET << "," << tower->Eta << "," << tower->Phi << ")" << std::endl;
 	
       }
 
