@@ -64,10 +64,10 @@ source $basedir/L1TSignalZerobiasMixer/setup.sh
 On relogin use the base directory, i.e., the directory with the date of creation above, e.g., /nfs_scratch/dasu/2021-11-03/
 
 ```
-source $basedir/L1TSignalZerobiasMixer/setup.sh
+source /nfs_scratch/dasu/2021-11-03/L1TSignalZerobiasMixer/setup.sh
 ```
 
-To produce data use  .txt files with different configurations
+To produce signal data (root files) use  *.txt files with different configurations; If you make your own signal process files, please share by making a pull request
 
 ```
 cd $datadir
@@ -78,10 +78,11 @@ With above .txt file the event files will be in the directory $datadir/cms-vbfh-
 
 There should now be a root file in your directory $datadir/cms-vbfh-pythia8-delphes/Events/run_01/tag_1_delphes_events.root
 
-We use root to read this data, and the CSV file from the zerobias run to produce the final file:
+We use root to read this data, and the CSV file from the zerobias run (https://github.com/SridharaDasu/L1TRegionDumper) to produce the final file:
 
 ```
 export SIGNAL_ROOT_FILE=$datadir/cms-vbfh-pythia8-delphes/Events/run_01/tag_1_delphes_events.root
 export ZEROBIAS_CSV_FILE=zerobias.csv
+cd $workdir
 root -l -q L1TSignalZerobiasMixer.C\(\"$SIGNAL_ROOT_FILE\"\,\"ZEROBIAS_CSV_FILE\"\)
 ```
