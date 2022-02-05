@@ -18,7 +18,13 @@ First time only
 If you are on machines with /cvmfs and CentOS8 (mucol01.hep.wisc.edu), you may use ROOT from there:
 
 ```
-if [ -d '/cvmfs' ]; then source /cvmfs/sft.cern.ch/lcg/views/LCG_101/x86_64-centos8-gcc11-opt/setup.sh; else echo "No /cvmfs mounted; Make sure root is installed and available" ; fi
+source /cvmfs/sft.cern.ch/lcg/views/LCG_101/x86_64-centos8-gcc11-opt/setup.sh
+```
+
+If you are on a Apple MacOS system, you need gcc, gfortran and root installedm and you may need this additionally for Madgraph and Delphes work:
+
+```
+if [ `uname` == 'Darwin' ]; then echo export MACOSX_DEPLOYMENT_TARGET=10.15; fi
 ```
 
 If you do not have a working Madgraph5 installation, do the following, in a directory with plenty of space:
@@ -35,39 +41,30 @@ From within the MG5_aMC prompt execute the following. They take a long time 10 m
 Optionally, you can track the log files in the secondary login window, if you wish.
 
 ```
-      install pythia8
-      install Delphes
-      exit
+install pythia8
+install Delphes
+exit
 ```
 
 If you do have a Madgraph5 directory already setup:
 
 ```
-if [ -d $mg5dir ]; then echo "Using Madgraph5 from $mg5dir"; else echo "Install Madgraph5 in $mg5dir using above instructions - define mg5dir"; fi
+export mg5dir=<your MG5_aMC_v3_2_0 directory>
+```
+
+Go to the dirctory where you wish to work and then install this code:
+
+```
 if [ -d '/nfs_scratch' ]; then export basedir=/nfs_scratch/$USER/`date +%Y-%m-%d`; else basedir=$PWD/`date +%Y-%m-%d`; fi
 mkdir -p $basedir
-cd $basedir
-git clone https://github.com/SridharaDasu/L1TSignalZerobiasMixer.git
-export workdir=$basedir/L1TSignalZerobiasMixer
-cd $workdir
-mkdir -p $workdir/data
-export datadir=$workdir/data
-if [ -d '/cvmfs' ]; then source /cvmfs/sft.cern.ch/lcg/views/LCG_101/x86_64-centos8-gcc11-opt/setup.sh; fi
-if [ `uname` == 'Darwin' ]; then echo export MACOSX_DEPLOYMENT_TARGET=10.15; fi
+git clone git@github.com:SridharaDasu/L1TSignalZerobiasMixer.git
+source $basedir/L1TSignalZerobiasMixer/setup.sh
 ```
 
-On relogin cd to the base directory, i.e., the directory with the date of creation above, e.g., /nfs_scratch/dasu/2021-11-03/
+On relogin use the base directory, i.e., the directory with the date of creation above, e.g., /nfs_scratch/dasu/2021-11-03/
 
 ```
-if [ -d $ROOTSYS ]; then echo "Using ROOT from $ROOTSYS"; else echo "ROOT is needed for this to work; fi
-if [ -d $mg5dir ]; then echo "Using Madgraph5 from $mg5dir"; else echo "Madgraph is needed for this to work; fi
-export basedir=$PWD
-export workdir=$basedir/L1TSignalZerobiasMixer
-export datadir=$workdir/data
-if [ -d '/cvmfs' ]; then source /cvmfs/sft.cern.ch/lcg/views/LCG_101/x86_64-centos8-gcc11-opt/setup.sh; fi
-export PYTHIA8DATA=$mg5dir/HEPTools/pythia8/share/Pythia8/xmldoc/
-export LHAPDF_DATA_PATH=$mg5dir/HEPTools/lhapdf6_py3/share/LHAPDF
-source $mg5dir/Delphes/DelphesEnv.sh
+source $basedir/L1TSignalZerobiasMixer/setup.sh
 ```
 
 To produce data use  .txt files with different configurations
@@ -84,7 +81,5 @@ There should now be a root file in your directory $datadir/Events/run_01/tag_1_d
 We use root to read this data, and the CSV file from the zerobias run to produce the final file:
 
 ```
-root -l L1TSignalZerobiasMixer.C\(\"/nfs_scratch/dasu/2022-01-17/L1TSignalZerobiasMixer/data/cms-vbfh-pythia8-delphes/Events/run_01/tag_2_delphes_events.root\"\)
+root -l L1TSignalZerobiasMixer.C\(\"$datadir/cms-vbfh-pythia8-delphes/Events/run_01/tag_1_delphes_events.root\"\)
 ```
-
-
