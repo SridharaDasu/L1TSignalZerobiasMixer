@@ -74,12 +74,14 @@ cd $datadir
 python $mg5dir/bin/mg5_aMC $workdir/cms-vbfh-pythia8-delphes.txt
 ```
 
-With above .txt file the event files will be in the directory $mg5dir/cms-vbfh-pythia8-delphes/run_01/
+With above .txt file the event files will be in the directory $datadir/cms-vbfh-pythia8-delphes/run_01/
 
-There should now be a root file in your directory $datadir/Events/run_01/tag_1_delphes_events.root
+There should now be a root file in your directory $datadir/cms-vbfh-pythia8-delphes/Events/run_01/tag_1_delphes_events.root
 
 We use root to read this data, and the CSV file from the zerobias run to produce the final file:
 
 ```
-root -l L1TSignalZerobiasMixer.C\(\"$datadir/cms-vbfh-pythia8-delphes/Events/run_01/tag_1_delphes_events.root\"\)
+export SIGNAL_ROOT_FILE=$datadir/cms-vbfh-pythia8-delphes/Events/run_01/tag_1_delphes_events.root
+export ZEROBIAS_CSV_FILE=zerobias.csv
+root -l -q L1TSignalZerobiasMixer.C\(\"$SIGNAL_ROOT_FILE\"\,\"ZEROBIAS_CSV_FILE\"\)
 ```
