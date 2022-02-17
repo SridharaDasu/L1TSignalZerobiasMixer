@@ -2,10 +2,11 @@
 
 This package contains instructions for
 1) producing Madgraph5 based signals,
-2) hadronize them using Pythia8
-3) simulate for CMS detector response using Delphes
-4) read zerobias L1TCaloRegion data, in a format suitable for L1TAutoEncoder studies, from separtately produced in CMSSW runs
-5) overlay a random zerobias event with the produced signal and save the data back in a format suitable for L1TAutoEncoder studies.
+2) hadronize them using Pythia8,
+3) simulate for CMS detector response using Delphes,
+4) read zerobias L1TCaloRegion data, in a format suitable for L1TAutoEncoder studies, from separtately produced files in CMSSW runs,
+5) overlay a random zerobias event with the produced signal,
+6) save the data back in a format suitable for L1TAutoEncoder studies.
 
 The inputs are madgraph, pythia8 and Delphes control files for the signal root file producer are named *.txt.
 
@@ -80,7 +81,7 @@ We use root to read this data, and the CSV file from the zerobias run (https://g
 
 ```
 export SIGNAL_ROOT_FILE=$datadir/cms-vbfh-pythia8-delphes/Events/run_01/tag_1_delphes_events.root
-export ZEROBIAS_CSV_FILE=zerobias.csv
+export ZEROBIAS_CSV_FILE=/nfs_scratch/dasu/2022-01/CMSSW_11_1_9/src/L1Trigger/L1TRegionDumper/test/L1TRegionDump.csv
 cd $workdir
 root -l -q L1TSignalZerobiasMixer.C\(\"$SIGNAL_ROOT_FILE\"\,\"$ZEROBIAS_CSV_FILE\"\)
 ```

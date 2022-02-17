@@ -284,4 +284,5 @@ void L1TSignalZerobiasMixer(const char *inputFile, const char* zerobiasCSVFile)
       }
     }
   }
+  std::cout << "End of processing" << std::endl;
 }
