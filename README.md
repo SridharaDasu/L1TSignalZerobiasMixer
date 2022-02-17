@@ -33,7 +33,6 @@ If you do not have a working Madgraph5 installation, do the following, in a dire
 wget https://launchpad.net/mg5amcnlo/3.0/3.2.x/+download/MG5_aMC_v3.2.0.tar.gz
 tar zxf MG5_aMC_v3.2.0.tar.gz 
 export mg5dir=$PWD/MG5_aMC_v3_2_0/
-cd $mg5dir
 python $mg5dir/bin/mg5_aMC
 ```
 
@@ -70,7 +69,6 @@ source /nfs_scratch/dasu/2021-11-03/L1TSignalZerobiasMixer/setup.sh
 To produce signal data (root files) use  *.txt files with different configurations; If you make your own signal process files, please share by making a pull request
 
 ```
-cd $datadir
 python $mg5dir/bin/mg5_aMC $workdir/cms-vbfh-pythia8-delphes.txt
 ```
 
