@@ -21,7 +21,7 @@ If you are on machines with /cvmfs and CentOS8 (mucol01.hep.wisc.edu), you may u
 source /cvmfs/sft.cern.ch/lcg/views/LCG_101/x86_64-centos8-gcc11-opt/setup.sh
 ```
 
-If you are on a Apple MacOS system, you need gcc, gfortran and root installedm and you may need this additionally for Madgraph and Delphes work:
+If you are on a Apple MacOS system, you need gcc, gfortran and root installed on your system, and you may need this additionally for Madgraph and Delphes work:
 
 ```
 if [ `uname` == 'Darwin' ]; then echo export MACOSX_DEPLOYMENT_TARGET=10.15; fi
@@ -84,5 +84,5 @@ We use root to read this data, and the CSV file from the zerobias run (https://g
 export SIGNAL_ROOT_FILE=$datadir/cms-vbfh-pythia8-delphes/Events/run_01/tag_1_delphes_events.root
 export ZEROBIAS_CSV_FILE=zerobias.csv
 cd $workdir
-root -l -q L1TSignalZerobiasMixer.C\(\"$SIGNAL_ROOT_FILE\"\,\"ZEROBIAS_CSV_FILE\"\)
+root -l -q L1TSignalZerobiasMixer.C\(\"$SIGNAL_ROOT_FILE\"\,\"$ZEROBIAS_CSV_FILE\"\)
 ```
