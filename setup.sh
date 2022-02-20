@@ -26,5 +26,5 @@ mkdir -p $datadir
 echo "Using basedir=$basedir";
 echo "Using workdir=$workdir";
 echo "Using datadir=$datadir";
-cd $datadir
+cd $workdir
 echo "Current directory set to $datadir";

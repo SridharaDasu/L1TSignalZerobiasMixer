@@ -42,7 +42,7 @@ uint32_t getRegionEta(double eta) {
      +3.000
     };						
   for(int rEta = 0; rEta < N_REGIONS_ETA; rEta++) {
-    if(eta >= etaBoundaries[rEta] && eta <= etaBoundaries[rEta + 1]) {
+    if(eta >= etaBoundaries[rEta] && eta < etaBoundaries[rEta + 1]) {
       return rEta;
     }
   }
@@ -111,7 +111,7 @@ uint32_t getTowerEta(double eta) {
      +3.000
     };						
   for(int tEta = 0; tEta < N_TOWERS_ETA; tEta++) {
-    if(eta >= etaBoundaries[tEta] && eta <= etaBoundaries[tEta + 1]) {
+    if(eta >= etaBoundaries[tEta] && eta < etaBoundaries[tEta + 1]) {
       return tEta;
     }
   }
@@ -130,7 +130,7 @@ uint32_t getRegionPhi(double phi) {
     }
   }
   for(int rPhi = 0; rPhi < N_REGIONS_PHI; rPhi++) {
-    if(phi >= phiBoundaries[rPhi] && phi <= phiBoundaries[rPhi + 1]) {
+    if(phi >= phiBoundaries[rPhi] && phi < phiBoundaries[rPhi + 1]) {
       return rPhi;
     }
   }
@@ -149,7 +149,7 @@ uint32_t getTowerPhi(double phi) {
     }
   }
   for(int tPhi = 0; tPhi < N_TOWERS_PHI; tPhi++) {
-    if(phi >= phiBoundaries[tPhi] && phi <= phiBoundaries[tPhi + 1]) {
+    if(phi >= phiBoundaries[tPhi] && phi < phiBoundaries[tPhi + 1]) {
       return tPhi;
     }
   }
@@ -172,16 +172,15 @@ void L1TSignalZerobiasMixer(const char *inputFile, const char* zerobiasCSVFile)
   std::cout << "numberOfEntries = " << numberOfEntries << std::endl;
   // Get pointers to branches used in this analysis
   TClonesArray *branchTower = treeReader->UseBranch("Tower");
-  std::cout << "*branchTower = " << branchTower << std::endl;
 
   std::ifstream zbFile(zerobiasCSVFile, ios::in);
   if(!zbFile.is_open()) {
-    std::cout << "Failed to open zerobias file - quitting" << std::endl;
+    std::cerr << "Failed to open zerobias file - quitting" << std::endl;
     return;
   }
   std::ofstream signalFile("L1TSignalZerobiasMixer.csv", ios::out);
   if(!signalFile.is_open()) {
-    std::cout << "Failed to open signal output file - quitting" << std::endl;
+    std::cerr << "Failed to open signal output file - quitting" << std::endl;
     return;
   }
   uint32_t etArray[N_REGIONS_ETA][N_REGIONS_PHI];
@@ -201,34 +200,39 @@ void L1TSignalZerobiasMixer(const char *inputFile, const char* zerobiasCSVFile)
       }
     }
     // Add one zerobias event
-    int ieta = -1;
-    int iphi = -1;
-    uint32_t et, location;
-    bool eleBit, tauBit;
+    int zbRegionEta = -1;
+    int zbRegionPhi = -1;
+    uint32_t zbET, zbLocation;
+    bool zbEleBit, zbTauBit;
     std::string line;
     for(int i = 0; i < N_REGIONS; i++) {
       getline(zbFile, line);
       std::stringstream lineStream(line);
       std::string word;
-      getline(lineStream, word, ','); ieta = atoi(word.c_str());
-      getline(lineStream, word, ','); iphi = atoi(word.c_str());
-      getline(lineStream, word, ','); et = atoi(word.c_str());
-      getline(lineStream, word, ','); location = atoi(word.c_str());
-      getline(lineStream, word, ','); eleBit = atoi(word.c_str());
-      getline(lineStream, word, ','); tauBit = atoi(word.c_str());
-      if (ieta > -1 && ieta < N_REGIONS_ETA && iphi > -1 && iphi < N_REGIONS_PHI) {
-	if((et - etArray[ieta][iphi]) > 0.5 * et) {
-	  locationArray[ieta][iphi] = location;
-	  eleBitArray[ieta][iphi] = eleBit;
-	  tauBitArray[ieta][iphi] = tauBit;
-	}
-	etArray[ieta][iphi] += et;
+      getline(lineStream, word, ','); zbRegionEta = atoi(word.c_str());
+      getline(lineStream, word, ','); zbRegionPhi = atoi(word.c_str());
+      getline(lineStream, word, ','); zbET = atoi(word.c_str());
+      getline(lineStream, word, ','); zbLocation = atoi(word.c_str());
+      getline(lineStream, word, ','); zbEleBit = atoi(word.c_str());
+      getline(lineStream, word, ','); zbTauBit = atoi(word.c_str());
+      if (zbRegionEta > -1 && zbRegionEta < N_REGIONS_ETA && zbRegionPhi > -1 && zbRegionPhi < N_REGIONS_PHI) {
+	etArray[zbRegionEta][zbRegionPhi] = zbET;
+	locationArray[zbRegionEta][zbRegionPhi] = zbLocation;
+	eleBitArray[zbRegionEta][zbRegionPhi] = zbEleBit;
+	tauBitArray[zbRegionEta][zbRegionPhi] = zbTauBit;
       }
     }
     // Load selected branches with data from specified event
-    treeReader->ReadEntry(event);
-    std::cout << "got event = " << event << std::endl;
+    std::cout << "Getting event = " << event;
+    if(!treeReader->ReadEntry(event)) {
+      std::cerr << " ... Failed to get event = " << event << std::endl;
+      continue;
+    }
+    else {
+      std::cout << " ... got event ... ";
+    }
     Long64_t nTowers = branchTower->GetEntries();
+    std::cout << "nTowers = " << nTowers;
     // If event contains at least 1 tower
     if(nTowers > 0) {
 
@@ -237,7 +241,10 @@ void L1TSignalZerobiasMixer(const char *inputFile, const char* zerobiasCSVFile)
       for(Int_t i = 0; i < nTowers; i++) {
 	
 	Tower *tower = (Tower*) branchTower->At(i);
-	
+	if(tower == 0) {
+	  std::cerr << "Bad tower" << std::endl;
+	  continue;
+	}
 	if(tower->Eta < -3.0 || tower->Eta > +3.0 || tower->Phi < -Pi || tower->Phi > +Pi) {
 	  lostET += tower->ET;
 	  continue;
@@ -248,6 +255,11 @@ void L1TSignalZerobiasMixer(const char *inputFile, const char* zerobiasCSVFile)
 	
 	uint32_t hitTowerEta = getTowerEta(tower->Eta);
 	uint32_t hitTowerPhi = getTowerPhi(tower->Phi);
+	if(hitTowerEta > N_TOWERS_ETA || hitTowerPhi > N_TOWERS_PHI) {
+	  std::cerr << "Crap: " << hitTowerEta << "," << hitTowerPhi << std::endl;
+	  std::cerr << "Tower (pt, eta, phi) = (" << tower->ET << "," << tower->Eta << "," << tower->Phi << ")" << std::endl;
+	  continue;
+	}
 	uint32_t hitRegionEta = hitTowerEta / 4;
 	uint32_t hitRegionPhi = hitTowerPhi / 4;
 	uint32_t hitTowerInRegionEta = hitTowerEta % 4;
@@ -255,21 +267,25 @@ void L1TSignalZerobiasMixer(const char *inputFile, const char* zerobiasCSVFile)
 	uint32_t location = hitTowerInRegionEta | (hitTowerInRegionPhi << 2);
 	bool eleBit = false;
 	bool tauBit = false;
-	if((tower->ET - etArray[ieta][iphi]) > 0.6 * tower->ET) {
+	if((tower->ET - etArray[hitRegionEta][hitRegionPhi]) > 0.6 * tower->ET) {
 	  tauBit = true;
 	  if((tower->E - tower->Eem) > 0.6 * tower->E) {
 	    eleBit = true;
 	  }
 	}
-	if((et - etArray[hitRegionEta][hitRegionPhi]) > 0.5 * et) {
+	if(hitRegionEta > N_REGIONS_ETA || hitRegionPhi > N_REGIONS_PHI) {
+	  std::cerr << "Crap: " << hitRegionEta << "," << hitRegionPhi << std::endl;
+	  std::cerr << "Tower (pt, eta, phi) = (" << tower->ET << "," << tower->Eta << "," << tower->Phi << ")" << std::endl;
+	  continue;
+	}
+	if((tower->ET  - etArray[hitRegionEta][hitRegionPhi]) > 0.5 * tower->ET ) {
 	  locationArray[hitRegionEta][hitRegionPhi] = location;
 	  eleBitArray[hitRegionEta][hitRegionPhi] = eleBit;
 	  tauBitArray[hitRegionEta][hitRegionPhi] = tauBit;
 	}
-	etArray[hitRegionEta][hitRegionPhi] += et;
-	
+	etArray[hitRegionEta][hitRegionPhi] += tower->ET;
       }
-      std::cout << "Signal ET added = " << goodET << "; Out of acceptance ET that is lost = " << lostET << std::endl;
+      std::cout << "; Signal ET added = " << goodET << "; Out of acceptance ET that is lost = " << lostET;
     }
     for(uint32_t ieta = 0; ieta < N_REGIONS_ETA; ieta++) {
       for(uint32_t iphi = 0; iphi < N_REGIONS_PHI; iphi++) {
@@ -283,6 +299,7 @@ void L1TSignalZerobiasMixer(const char *inputFile, const char* zerobiasCSVFile)
 	  << std::endl;
       }
     }
+    std::cout << " ... Done " << event << std::endl;
   }
   std::cout << "End of processing" << std::endl;
 }
