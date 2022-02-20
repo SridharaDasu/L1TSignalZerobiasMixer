@@ -158,7 +158,7 @@ uint32_t getTowerPhi(double phi) {
 
 //------------------------------------------------------------------------------
 
-void L1TSignalZerobiasMixer(const char *inputFile, const char* zerobiasCSVFile)
+void L1TSignalZerobiasMixer(const char *inputFile, const char* zerobiasCSVFile, const char*outputCSVFile)
 {
   gSystem->Load("libDelphes");
 
@@ -178,7 +178,7 @@ void L1TSignalZerobiasMixer(const char *inputFile, const char* zerobiasCSVFile)
     std::cerr << "Failed to open zerobias file - quitting" << std::endl;
     return;
   }
-  std::ofstream signalFile("L1TSignalZerobiasMixer.csv", ios::out);
+  std::ofstream signalFile(outputCSVFile, ios::out);
   if(!signalFile.is_open()) {
     std::cerr << "Failed to open signal output file - quitting" << std::endl;
     return;

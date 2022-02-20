@@ -82,6 +82,7 @@ We use root to read this data, and the CSV file from the zerobias run (https://g
 ```
 export SIGNAL_ROOT_FILE=$datadir/cms-vbfh-pythia8-delphes/Events/run_01/tag_1_delphes_events.root
 export ZEROBIAS_CSV_FILE=/nfs_scratch/dasu/2022-01/CMSSW_11_1_9/src/L1Trigger/L1TRegionDumper/test/L1TRegionDump.csv
+export OUTPUT_CSV_FILE="cms-vbfh.csv"
 cd $workdir
-root -l -q L1TSignalZerobiasMixer.C\(\"$SIGNAL_ROOT_FILE\"\,\"$ZEROBIAS_CSV_FILE\"\)
+root -l -q L1TSignalZerobiasMixer.C\(\"$SIGNAL_ROOT_FILE\"\,\"$ZEROBIAS_CSV_FILE\"\,\"$OUTPUT_CSV_FILE\"\)
 ```
