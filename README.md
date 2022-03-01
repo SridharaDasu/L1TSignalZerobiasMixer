@@ -47,6 +47,7 @@ From within the MG5_aMC prompt execute the following. They take a long time 10 m
 Optionally, you can track the log files in the secondary login window, if you wish.
 
 ```
+install lhapdf6
 install pythia8
 install Delphes
 exit
