@@ -16,6 +16,12 @@ Code installation instructions:
 
 First time only
 
+If you are on machines with /cvmfs and CentOS7 (login.hep.wisc.edu), you may use ROOT from there:
+
+```
+source /cvmfs/sft.cern.ch/lcg/views/LCG_101/x86_64-centos7-gcc11-opt/setup.sh 
+```
+
 If you are on machines with /cvmfs and CentOS8 (mucol01.hep.wisc.edu), you may use ROOT from there:
 
 ```
