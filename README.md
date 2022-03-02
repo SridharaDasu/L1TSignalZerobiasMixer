@@ -77,6 +77,7 @@ source /nfs_scratch/dasu/2021-11-03/L1TSignalZerobiasMixer/setup.sh
 To produce signal data (root files) use  *.txt files with different configurations; If you make your own signal process files, please share by making a pull request
 
 ```
+cd $datadir
 python $mg5dir/bin/mg5_aMC $workdir/cms-vbfh-pythia8-delphes.txt
 ```
 
@@ -89,7 +90,7 @@ We use root to read this data, and the CSV file from the zerobias run (https://g
 ```
 export SIGNAL_ROOT_FILE=$datadir/cms-vbfh-pythia8-delphes/Events/run_01/tag_1_delphes_events.root
 export ZEROBIAS_CSV_FILE=/nfs_scratch/dasu/2022-01/CMSSW_11_1_9/src/L1Trigger/L1TRegionDumper/test/L1TRegionDump.csv
-export OUTPUT_CSV_FILE="cms-vbfh.csv"
+export OUTPUT_CSV_FILE="$datadir/cms-vbfh.csv"
 cd $workdir
 root -l -q L1TSignalZerobiasMixer.C\(\"$SIGNAL_ROOT_FILE\"\,\"$ZEROBIAS_CSV_FILE\"\,\"$OUTPUT_CSV_FILE\"\)
 ```
