@@ -9,4 +9,4 @@ set wh 0.004
 set ebeam1 6500.
 set ebeam2 6500.
 set nevents 1000
-set iseed 1823211
+set iseed 0
