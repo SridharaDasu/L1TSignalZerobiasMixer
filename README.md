@@ -94,3 +94,18 @@ export OUTPUT_CSV_FILE="$datadir/cms-vbfh.csv"
 cd $workdir
 root -l -q L1TSignalZerobiasMixer.C\(\"$SIGNAL_ROOT_FILE\"\,\"$ZEROBIAS_CSV_FILE\"\,\"$OUTPUT_CSV_FILE\"\)
 ```
+
+Command to run Madgraph on the UW cluster:
+
+```
+runWiscJobs.py \
+  --WorkFlow MG5Job \
+  --Executable=runMG5JobOnWorker.sh \
+  --Arguments=cms-vbfh-pythia8-delphes.txt \
+  --nJobs=10 \
+  --TransferInputFile=/nfs_scratch/dasu/CentOS7/MyMG5Dir.tar.gz \
+  --OutputDir=/nfs_scratch/$USER \
+  --HDFSProdDir None \
+  --Experiment mucol \
+  --MemoryRequirements 2048
+```

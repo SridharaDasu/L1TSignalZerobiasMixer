@@ -15,5 +15,5 @@ echo "Current directory set to $datadir"
 mkdir -p $datadir
 cd $datadir
 export random=`date +"%S%M%H%S"`
-cat $workdir/mg5_configuration.txt | sed 's/set iseed 0/set iseed '"$random"'/g' > mg5_configuration_$random.txt
+cat $workdir/$1 | sed 's/set iseed 0/set iseed '"$random"'/g' > mg5_configuration_$random.txt
 python $mg5dir/bin/mg5_aMC mg5_configuration_$random.txt
