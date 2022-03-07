@@ -1,14 +1,14 @@
 #!/bin/bash
 source /cvmfs/sft.cern.ch/lcg/views/LCG_101/x86_64-centos7-gcc11-opt/setup.sh
 tar zxf MyMG5Dir.tar.gz
-export mg5dir=$PWD/`tar ztf /nfs_scratch/dasu/CentOS7/MyMG5Dir.tar.gz | head -1`
+export mg5dir=$PWD/`tar ztf MyMG5Dir.tar.gz | head -1`
 for file in `grep '/nfs_scratch/dasu/CentOS7/' $mg5dir -Ilr`; do
     cat $file | sed 's|/nfs_scratch/dasu/CentOS7|'$PWD'|g' > $file
 done
 if [[ $1 == cms-* ]]; then
     cp $mg5dir/Delphes/cards/delphes_card_CMS.tcl $mg5dir/Template/Common/Cards/delphes_card_default.dat
 elif [[ $1 == mc-* ]]; then
-    cp $mg5dir/Delphes/cards/delphes_card_MuonColliderDet.tcl $mg5dir/Template/Common/Cards/delphes_card_default.dat
+    cp delphes_card_MuonColliderDet_MuonInJetShort.tcl $mg5dir/Template/Common/Cards/delphes_card_default.dat
     cp -r $mg5dir/Delphes/cards/MuonCollider $mg5dir/Template/Common/Cards/
 elif [[ $1 == c3-* ]]; then
     cp $mg5dir/Delphes/cards/delphes_card_ILD.tcl $mg5dir/Template/Common/Cards/delphes_card_default.dat
@@ -37,5 +37,5 @@ cd $datadir
 cat $workdir/$1 | sed 's/set iseed 0/set iseed '"$MyRandomNumber"'/g' > mg5_configuration_$MyRandomNumber.txt
 python $mg5dir/bin/mg5_aMC mg5_configuration_$MyRandomNumber.txt
 cd $workdir
-ls -l $datadir/cms-vbfh-pythia8-delphes/Events/run_01/
-tar zcf $MyRandomNumber.tar.gz $datadir/cms-vbfh-pythia8-delphes/Events/run_01/
+ls -l $datadir
+tar zcf $MyRandomNumber.tar.gz $datadir

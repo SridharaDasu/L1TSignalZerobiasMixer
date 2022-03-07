@@ -1,0 +1,12 @@
+#!/bin/bash
+
+runWiscJobs.py \
+  --WorkFlow KennyVVQQZJobs \
+  --Executable=runMG5JobOnWorker.sh \
+  --Arguments=mc-vvqqz.txt \
+  --nJobs=1000 \
+  --TransferInputFile=/nfs_scratch/dasu/CentOS7/MyMG5Dir.tar.gz,mc-vvqqz.txt,delphes_card_MuonColliderDet_MuonInJetShort.tcl \
+  --OutputDir=/nfs_scratch/$USER \
+  --HDFSProdDir None \
+  --Experiment mucol \
+  --MemoryRequirements 2048
