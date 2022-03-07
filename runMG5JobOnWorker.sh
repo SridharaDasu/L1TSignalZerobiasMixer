@@ -1,9 +1,9 @@
 #!/bin/bash
 source /cvmfs/sft.cern.ch/lcg/views/LCG_101/x86_64-centos7-gcc11-opt/setup.sh
 tar zxf MyMG5Dir.tar.gz
-export mg5dir=$PWD/MG5_aMC_v3_2_0
+export mg5dir=$PWD/`tar ztf /nfs_scratch/dasu/CentOS7/MyMG5Dir.tar.gz | head -1`
 for file in `grep '/nfs_scratch/dasu/CentOS7/' $mg5dir -Ilr`; do
-    cat $file | sed 's|/nfs_scratch/dasu/CentOS7/MG5_aMC_v3_2_0|'$mg5dir'|g' > $file
+    cat $file | sed 's|/nfs_scratch/dasu/CentOS7|'$PWD'|g' > $file
 done
 if [[ $1 == cms-* ]]; then
     cp $mg5dir/Delphes/cards/delphes_card_CMS.tcl $mg5dir/Template/Common/Cards/delphes_card_default.dat
