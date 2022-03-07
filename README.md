@@ -99,11 +99,11 @@ Command to run Madgraph on the UW cluster:
 
 ```
 runWiscJobs.py \
-  --WorkFlow MG5Job \
+  --WorkFlow MG5Jobs \
   --Executable=runMG5JobOnWorker.sh \
   --Arguments=cms-vbfh-pythia8-delphes.txt \
   --nJobs=10 \
-  --TransferInputFile=/nfs_scratch/dasu/CentOS7/MyMG5Dir.tar.gz \
+  --TransferInputFile=/nfs_scratch/dasu/CentOS7/MyMG5Dir.tar.gz,cms-vbfh-pythia8-delphes.txt \
   --OutputDir=/nfs_scratch/$USER \
   --HDFSProdDir None \
   --Experiment mucol \

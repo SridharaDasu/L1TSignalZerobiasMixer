@@ -1,7 +1,7 @@
 set run_mode 0
 import model sm
 generate p p > h j j
-output cms-vbfh-pythia8-delphes
+output atlas-vbfh-pythia8-delphes
 launch
 shower=Pythia8
 detector=Delphes
